@@ -1,0 +1,6 @@
+server:
+  port: 8081
+
+userinfo:
+  name: roy
+  phone: 123456

@@ -1,0 +1,6 @@
+server:
+  port: 8082
+
+userinfo:
+  name: yor
+  phone: 654321

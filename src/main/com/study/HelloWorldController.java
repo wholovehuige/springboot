@@ -1,5 +1,6 @@
 package com.study;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,11 +9,18 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class HelloWorldController {
+    @Autowired
+    private Properties properties;
 
-    @GetMapping(path = "/hello")
+    @GetMapping(value = "hello")
     public String getHelloWorld() {
 
         return "helloWorld";
+    }
+
+    @GetMapping(value = "user")
+    public String getUserInfo() {
+        return "name:" + properties.getName() +"   ==========   "+ "phone:" + properties.getPhone();
     }
 
 }
