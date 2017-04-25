@@ -84,4 +84,18 @@ public class User {
     public void setUpDate(Date upDate) {
         this.upDate = upDate;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", password='" + password + '\'' +
+                ", userName='" + userName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", role='" + role + '\'' +
+                ", crDate=" + crDate +
+                ", upDate=" + upDate +
+                '}';
+    }
 }
