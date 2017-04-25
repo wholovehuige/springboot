@@ -1,0 +1,5 @@
+# springboot
+about springboot project
+这个主要是练习快速搭建springboot开发环境，我选了几个常用的框架，适用于快速开发的程序
+搭建好之后我会写一个demo
+之后我会把注册和登陆两个功能写了，写完之后这个demo就到此为止了
