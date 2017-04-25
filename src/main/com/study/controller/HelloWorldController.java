@@ -1,5 +1,6 @@
-package com.study;
+package com.study.controller;
 
+import com.study.properties.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,5 +23,7 @@ public class HelloWorldController {
     public String getUserInfo() {
         return "name:" + properties.getName() +"   ==========   "+ "phone:" + properties.getPhone();
     }
+
+
 
 }

@@ -1,3 +1,14 @@
 spring:
   profiles:
     active: prd
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://139.199.94.67:3306/apple?useUnicode=true&characterEncoding=gbk&zeroDateTimeBehavior=convertToNull
+    username: roy
+    password: 123456
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
