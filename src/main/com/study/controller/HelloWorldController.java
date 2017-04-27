@@ -2,26 +2,31 @@ package com.study.controller;
 
 import com.study.properties.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by Administrator on 2017/4/25.
  */
-@RestController
+@Controller
 public class HelloWorldController {
     @Autowired
     private Properties properties;
 
-    @GetMapping(value = "hello")
-    public String getHelloWorld() {
-
-        return "helloWorld";
+    @RequestMapping(value = "hello")
+    public String getHelloWorld(Model model) {
+        model.addAttribute("name","HelloWorld");
+        return "hello";
     }
 
-    @GetMapping(value = "user")
-    public String getUserInfo() {
-        return "name:" + properties.getName() +"   ==========   "+ "phone:" + properties.getPhone();
+    @RequestMapping(value = "user")
+    public String getUserInfo(Model model) {
+        model.addAttribute("name",properties.getName());
+        model.addAttribute("phone",properties.getPhone());
+        return "user";
     }
 
 
