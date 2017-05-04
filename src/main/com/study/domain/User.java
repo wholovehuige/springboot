@@ -14,9 +14,9 @@ public class User {
     @GeneratedValue
     private Integer id;
     private String userId;
-    private String password;
     private String userName;
     private String phone;
+    private String email;
     private String role;
     private Date crDate;
     private Date upDate;
@@ -37,14 +37,6 @@ public class User {
         this.userId = userId;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -59,6 +51,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getRole() {
@@ -83,19 +83,5 @@ public class User {
 
     public void setUpDate(Date upDate) {
         this.upDate = upDate;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
-                ", userName='" + userName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", role='" + role + '\'' +
-                ", crDate=" + crDate +
-                ", upDate=" + upDate +
-                '}';
     }
 }

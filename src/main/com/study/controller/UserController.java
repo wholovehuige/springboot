@@ -45,7 +45,6 @@ public class UserController {
         try {
             User user = new User();
             user.setUserId(UUID.randomUUID().toString().replace("-", ""));
-            user.setPassword(password);
             user.setUserName(userName);
             user.setPhone(phone);
             user.setRole(role);

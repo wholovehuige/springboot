@@ -1,7 +1,7 @@
 package com.study.service;
 
 /**
- * Created by Administrator on 2017/4/25.
+ * Created by Administrator on 2017/5/4.
  */
-public class UserService {
+public interface UserService {
 }

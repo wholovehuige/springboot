@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prd
+    active: dev
 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -12,3 +12,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  thymeleaf:
+    mode: HTML5
+    encoding: UTF-8
+    content-type: text/html
+    cache: false
