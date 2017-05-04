@@ -12,28 +12,8 @@ import java.util.Date;
 /**
  * Created by Administrator on 2017/5/4.
  */
-@Service
-public class LoginServiceImpl implements LoginService {
-    @Autowired
-    private LoginRepository loginRepository;
-    @Autowired
-    private UserServiceImpl userService;
+public class LoginServiceImpl {
 
-    @Override
-    public Login findByPhone(String phone) {
-        return loginRepository.findByPhone(phone);
-    }
-
-    @Override
-    @Transactional
-    public String register(String phone, String password) {
-        Login login = new Login();
-        login.setPhone(phone);
-        login.setPassword(password);
-        login.setCrDate(new Date());
-        loginRepository.save(login);
-        return userService.init(phone);
-    }
 
 
 

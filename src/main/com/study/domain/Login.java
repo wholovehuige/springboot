@@ -1,5 +1,6 @@
 package com.study.domain;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.Date;
 /**
  * Created by Administrator on 2017/5/4.
  */
+@Entity
 public class Login {
     @Id
     @GeneratedValue
