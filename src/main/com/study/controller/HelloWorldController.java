@@ -5,6 +5,7 @@ import com.study.domain.User;
 import com.study.properties.Properties;
 import com.study.repository.LoginRepository;
 import com.study.repository.UserRepository;
+import com.study.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +23,7 @@ public class HelloWorldController {
     @Autowired
     private Properties properties;
     @Autowired
-    private LoginRepository loginRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private LoginService loginService;
 
     @RequestMapping(value = "/")
     public String getHelloWorld(Model model) {
@@ -42,29 +41,32 @@ public class HelloWorldController {
 
     @PostMapping(value = "/register")
     public String register(Login loginin,Model model) {
-        if(loginin == null || "".equals(loginin.getPhone())) {
-            return "";
-        }
-        Login loginMessage = loginRepository.findByPhone(loginin.getPhone());
-        if(loginMessage != null) {
-            return "";
-        }
-        Login login = new Login();
-        login.setPhone(loginin.getPhone());
-        login.setPassword(loginin.getPassword());
-        login.setCrDate(new Date());
-        loginRepository.save(login);
-        String uuid = UUID.randomUUID().toString();
-        String userId = uuid.replaceAll("-","");
-        User user = new User();
-        user.setUserId(userId);
-        user.setPhone(loginin.getPhone());
-        user.setUserName("");
-        user.setRole("");
-        user.setEmail("");
-        user.setCrDate(new Date());
-        user.setUpDate(new Date());
-        userRepository.save(user);
+        String phone = loginin.getPhone();
+        String password = loginin.getPassword();
+//        if(loginin == null || "".equals(loginin.getPhone())) {
+//            return "";
+//        }
+//        Login loginMessage = loginRepository.findByPhone(loginin.getPhone());
+//        if(loginMessage != null) {
+//            return "";
+//        }
+//        Login login = new Login();
+//        login.setPhone(loginin.getPhone());
+//        login.setPassword(loginin.getPassword());
+//        login.setCrDate(new Date());
+//        loginRepository.save(login);
+//        String uuid = UUID.randomUUID().toString();
+//        String userId = uuid.replaceAll("-","");
+//        User user = new User();
+//        user.setUserId(userId);
+//        user.setPhone(loginin.getPhone());
+//        user.setUserName("");
+//        user.setRole("");
+//        user.setEmail("");
+//        user.setCrDate(new Date());
+//        user.setUpDate(new Date());
+//        userRepository.save(user);
+        String userId = loginService.register(phone,password);
         model.addAttribute("userId",userId);
         return "user";
     }

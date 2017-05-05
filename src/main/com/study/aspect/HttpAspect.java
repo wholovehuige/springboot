@@ -26,6 +26,7 @@ public class HttpAspect{
     @Before("log()")
     public void doBefore(JoinPoint joinPoint) {
         //url
+
        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
        HttpServletRequest request = attributes.getRequest();
        logger.info("url={}" ,request.getRequestURL());
