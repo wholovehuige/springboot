@@ -4,9 +4,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://139.199.94.67:3306/apple?useUnicode=true&characterEncoding=gbk&zeroDateTimeBehavior=convertToNull
-    username: roy
-    password: 123456
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: password
 
   jpa:
     hibernate:
@@ -18,4 +18,7 @@ spring:
     encoding: UTF-8
     content-type: text/html
     cache: false
-    prefix: classpath:/web/templates/
+    prefix: classpath:/templates/
+    suffix: .html
+#  mvc:
+#    static-path-pattern: classpath:/

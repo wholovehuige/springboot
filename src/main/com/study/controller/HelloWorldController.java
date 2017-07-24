@@ -28,14 +28,14 @@ public class HelloWorldController {
     @RequestMapping(value = "/")
     public String getHelloWorld(Model model) {
         model.addAttribute("name","HelloWorld");
-        return "hello";
+        return "login";
     }
 
     @RequestMapping(value = "/user")
     public String getUserInfo(Model model) {
         model.addAttribute("name",properties.getName());
         model.addAttribute("phone",properties.getPhone());
-        return "user";
+        return "page/user";
     }
 
 

@@ -2,6 +2,8 @@ package com.study.controller;
 
 import com.study.domain.User;
 import com.study.repository.UserRepository;
+import com.study.service.LoginService;
+import com.study.web.request.RegisterRquest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +15,20 @@ import java.util.UUID;
  * Created by Administrator on 2017/4/25.
  */
 @RestController
+@RequestMapping(value = "/user")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private LoginService loginService;
+
+    @PostMapping(value = "/register")
+    public String register(@RequestParam("password") String password,
+                           @RequestParam("phone") String phone) {
+//        String phone = registerRquest.getPhone();
+//        String password = registerRquest.getPassword();
+        return loginService.register(phone,password);
+    }
 
     /**
      * 查询一个

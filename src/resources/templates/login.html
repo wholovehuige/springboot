@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/css/login.css"/>
+    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+<a th:href="@{/user}" th:method="get">页面跳转</a>
+
+<div id="registerForm" class="loginClass">
+        <div id="user">
+            电话号码：<input id="phone" th:name="phone" type="text" /><br />
+        </div>
+        <div id="pass">
+            密&nbsp;码：<input id="password" th:name= "password"  type="password" /><br />
+        </div>
+        <div id="control" class="register-btn">
+            <button id="register" class="register-btn" name="register" onclick="register()">注册</button>
+        </div>
+</div>
+</body>
+<script type="text/javascript">
+    function register() {
+        var phone = $("#phone").val();
+        var password = $("#password").val();
+        console.log(phone);
+        console.log(password);
+//        $.ajax({
+//
+//        });
+    }
+</script>
+</html>

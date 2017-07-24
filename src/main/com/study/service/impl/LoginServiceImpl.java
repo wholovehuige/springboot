@@ -26,7 +26,7 @@ public class LoginServiceImpl implements LoginService{
     public String register(String phone, String password) {
         Login in = loginRepository.findByPhone(phone);
         if(in != null) {
-            return "";
+            return "该用户已经注册";
         }
         Login login = new Login();
         login.setPhone(phone);
