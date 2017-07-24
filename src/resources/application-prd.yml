@@ -4,3 +4,9 @@ server:
 userinfo:
   name: yor
   phone: 654321
+spring:
+  datasource:
+    url: jdbc:mysql://rm-uf6f66d26gd6rl06io.mysql.rds.aliyuncs.com:3306/apple?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: apple
+    password: apple
+    driver-class-name: com.mysql.jdbc.Driver

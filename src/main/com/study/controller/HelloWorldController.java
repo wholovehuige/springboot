@@ -28,9 +28,12 @@ public class HelloWorldController {
     @RequestMapping(value = "/")
     public String getHelloWorld(Model model) {
         model.addAttribute("name","HelloWorld");
+        return "index";
+    }
+    @RequestMapping(value = "/login")
+    public String getLogin() {
         return "login";
     }
-
     @RequestMapping(value = "/user")
     public String getUserInfo(Model model) {
         model.addAttribute("name",properties.getName());

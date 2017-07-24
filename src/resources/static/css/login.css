@@ -1,7 +1,8 @@
 .loginClass{
-    text-align: center;
-    width: 500px;
-    height: 500px;
+    width: 200px;
+    height: 350px;
+    margin-top: 20px;
+    position: absolute;
 }
 .register-btn{
     text-align: center;

@@ -4,3 +4,9 @@ server:
 userinfo:
   name: roy
   phone: 123456
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: password
