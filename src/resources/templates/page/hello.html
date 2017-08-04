@@ -1,22 +1,115 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<html xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+      lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <title>HelloWorld</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css"/>
+    <script type="text/javascript" src="/js/vue/vue.min.js"></script>
+    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.min.js"></script>
 </head>
 <body>
-<div id="registerForm" class="loginClass">
-    <form action="/register" method="post">
-        <div id="user">
-            电话号码：<input name="phone" type="text" /><br />
-        </div>
-        <div id="pass">
-            密&nbsp;码：<input name="password" type="password" /><br />
-        </div>
-        <div id="control">
-            <input name="register" type="submit" value="注册" />
-        </div>
-    </form>
+
+<div id="dataForm" class="loginClass">
+    <button id="se" type="button" v-on:click="getAll()">fsdfadsf</button>
+    <table id="allData" class="table table-bordered">
+        <caption>边框表格布局</caption>
+        <thead>
+        <tr>
+            <td>姓名</td>
+            <td>登录名</td>
+            <td>电话</td>
+            <td>状态</td>
+            <td>uid</td>
+            <td>修改</td>
+        </tr>
+        </thead>
+        <thead id="data" v-for="site in data.data">
+        <tr>
+            <td>{{ site.name }}</td>
+            <td>{{ site.username }}</td>
+            <td>{{ site.phone }}</td>
+            <td>{{ site.state }}</td>
+            <td>{{ site.uid }}</td>
+            <td><button v-on:click="getByUid(site.uid)">修改</button></td>
+        </tr>
+        </thead>
+    </table>
+
+    <table id="singleData"  class="table table-bordered">
+        <caption>边框表格布局</caption>
+        <thead>
+            <tr>
+                <td>姓名</td>
+                <td>登录名</td>
+                <td>电话</td>
+                <td>状态</td>
+                <td>uid</td>
+                <td>修改</td>
+            </tr>
+        </thead>
+        <thead id="user">
+            <tr>
+                <td><input type="text" v-model="user.name"></td>
+                <td><input type="text" v-model="user.username"></td>
+                <td><input type="text" v-model="user.phone"></td>
+                <td><input type="text" v-model="user.state"></td>
+                <td>{{user.uid}}</td>
+                <td><button v-on:click="updateMethod(user.uid,user.phone,user.name,user.username,user.state)">提交</button></td>
+            </tr>
+        </thead>
+    </table>
+
 </div>
 </body>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#dataForm',
+        data: {
+            data: 'data',
+            user: 'user',
+        },
+        methods: {
+            getAll: function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/user/userList',
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        vue.data = data;
+                    }
+                })
+            },
+
+            getByUid: function ( uid) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/user/oneUser',
+                    dataType: 'json',
+                    data: {uid: uid},
+                    cache: false,
+                    success: function (data) {
+                        console.log(data);
+                        vue.user = data;
+                    }
+                })
+            },
+            updateMethod : function (uid, phone,  name, username, state) {
+                $.ajax({
+                    type:'GET',
+                    url: '/user/updateOne',
+                    dataType:'json',
+                    data:{uid:uid, phone:phone,  name:name, username:username, state:state},
+                    success : function (data) {
+                        console.log(data)
+                    }
+                })
+            }
+
+
+        }
+
+    })
+</script>
 </html>

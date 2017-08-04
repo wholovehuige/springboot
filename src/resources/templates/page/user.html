@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <title>user</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css"/>
+    <script type="text/javascript" src="/js/vue/vue.min.js"></script>
+    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.min.js"></script>
 </head>
 <body>
-<p th:text="${name}" />
+<div id="app">
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="phone" class="col-sm-2 control-label">名字</label>
+            <div class="col-sm-10">
+                <input id="phone" type="text" class="form-control"
+                       placeholder="请输入用户名">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="col-sm-2 control-label">姓</label>
+            <div class="col-sm-10">
+                <input id="password" type="text" class="form-control"
+                       placeholder="请输入密码">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button id="submit" type="button" v-on:click="register()" class="btn btn-default">注册</button>
+            </div>
+        </div>
+    </form>
+</div>
+<p></p>
 </body>
+<script type="text/javascript">
+
+    var vue = new Vue({
+        el:'#app',
+        data:{
+          data:''
+        },
+        methods:{
+            register: function () {
+                var phone = document.getElementById("phone").value;
+                var password = document.getElementById("password").value;
+                $.ajax({
+                    type:'POST',
+                    url:'/user/register',
+//                    dataType:'json',
+                    data:{phone:phone,password:password},
+                    cache:false,
+                    success:function (data) {
+                        console.log(data);
+                        vue.data = data;
+                    }
+                })
+            }
+        }
+    })
+</script>
 </html>

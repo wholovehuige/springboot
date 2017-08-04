@@ -1,13 +1,12 @@
 package com.study.service.impl;
 
-import com.study.domain.Login;
-import com.study.domain.User;
+import com.study.domain.user.Login;
+import com.study.domain.user.UserInfo;
 import com.study.repository.LoginRepository;
-import com.study.repository.UserRepository;
+import com.study.repository.UserInfoRepository;
 import com.study.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.UUID;
@@ -18,7 +17,7 @@ import java.util.UUID;
 @Service
 public class LoginServiceImpl implements LoginService{
     @Autowired
-    private UserRepository userRepository;
+    private UserInfoRepository userRepository;
     @Autowired
     private LoginRepository loginRepository;
 
@@ -34,16 +33,14 @@ public class LoginServiceImpl implements LoginService{
         login.setCrDate(new Date());
         loginRepository.save(login);
         String uuid = UUID.randomUUID().toString();
-        String userId = uuid.replaceAll("-","");
-        User user = new User();
-        user.setUserId(userId);
-        user.setPhone(phone);
-        user.setUserName("");
-        user.setRole("");
-        user.setEmail("");
-        user.setCrDate(new Date());
-        user.setUpDate(new Date());
-        userRepository.save(user);
-        return userId;
+        String uid = uuid.replaceAll("-","");
+        UserInfo userInfo = new UserInfo();
+//        userInfo.setUid(uid);
+        userInfo.setPhone(phone);
+        userInfo.setPassword(password);
+        userInfo.setCrDate(new Date());
+        userInfo.setUpDate(new Date());
+        userRepository.save(userInfo);
+        return uid;
     }
 }

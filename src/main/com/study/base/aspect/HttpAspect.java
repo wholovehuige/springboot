@@ -1,9 +1,12 @@
 //package com.study.base.aspect;
 //
+//import com.study.domain.RequestDomain;
+//import com.study.repository.RequestDomainRepository;
 //import org.aspectj.lang.JoinPoint;
 //import org.aspectj.lang.annotation.*;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
+//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Component;
 //import org.springframework.web.context.request.RequestContextHolder;
 //import org.springframework.web.context.request.ServletRequestAttributes;
@@ -17,7 +20,12 @@
 //@Component
 //public class HttpAspect{
 //
+//    @Autowired
+//    private RequestDomainRepository requestDomainRepository;
+//
 //    private final static Logger logger = LoggerFactory.getLogger(HttpAspect.class);
+//
+//    RequestDomain requestDomain = new RequestDomain();
 //
 //    @Pointcut("execution(public * com.study.controller.*.*(..))")
 //    public void log() {
@@ -39,6 +47,12 @@
 //        //参数
 //        logger.info("args={}" + joinPoint.getArgs());
 //        logger.info("拦截controller之前打印");
+//        requestDomain.setUrl(request.getRequestURL().toString());
+//        requestDomain.setMethod(request.getMethod());
+//        requestDomain.setIp(request.getRemoteAddr());
+//        requestDomain.setClassMethod(joinPoint.getSignature().getDeclaringTypeName() + "."+joinPoint.getSignature().getName());
+//        requestDomain.setArgs(joinPoint.getArgs().toString());
+//        requestDomainRepository.save(requestDomain);
 //    }
 //
 //    @After("log()")

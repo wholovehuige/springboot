@@ -3,7 +3,7 @@ package com.study.web.request;
 /**
  * Created by roy on 2017/7/23.
  */
-public class RegisterRquest {
+public class RegisterRequest {
     private String phone;
     private String password;
 

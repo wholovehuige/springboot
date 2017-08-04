@@ -1,6 +1,6 @@
 package com.study.repository;
 
-import com.study.domain.Login;
+import com.study.domain.user.Login;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

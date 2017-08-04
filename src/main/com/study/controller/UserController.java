@@ -1,73 +1,81 @@
 package com.study.controller;
 
-import com.study.domain.User;
-import com.study.repository.UserRepository;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.study.domain.user.UserInfo;
+import com.study.properties.Properties;
+import com.study.repository.UserInfoRepository;
 import com.study.service.LoginService;
-import com.study.web.request.RegisterRquest;
+import com.study.service.UserInfoService;
+import com.study.web.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Administrator on 2017/4/25.
  */
-@RestController
+@Controller
 @RequestMapping(value = "/user")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private Properties properties;
+
     @Autowired
     private LoginService loginService;
 
-    @PostMapping(value = "/register")
-    public String register(@RequestParam("password") String password,
-                           @RequestParam("phone") String phone) {
-//        String phone = registerRquest.getPhone();
-//        String password = registerRquest.getPassword();
-        return loginService.register(phone,password);
+    @Autowired
+    private UserInfoService userInfoService;
+
+    @RequestMapping(value = "/user")
+    public String getUserInfo(Model model) {
+        model.addAttribute("name",properties.getName());
+        model.addAttribute("phone",properties.getPhone());
+        return "page/user";
     }
 
-    /**
-     * 查询一个
-     * @param id
-     * @return
-     */
-    @GetMapping(value = "info")
-    public User selectOne(@RequestParam("id") Integer id) {
-        return  userRepository.findOne(id);
+    @PostMapping(value = "/register")
+//    @ResponseBody
+    public String register(RegisterRequest registerRequest) {
+        String phone = registerRequest.getPhone();
+        String password = registerRequest.getPassword();
+        String res =  loginService.register(phone,password);
+        return res;
     }
+
 
     /**
      * 查询所有
      * @return
      */
-    @GetMapping(value = "userInfo")
-    public List<User> getInfo() {
-        return userRepository.findAll();
+    @RequestMapping(value = "/userList")
+    @ResponseBody
+    public JSONObject getInfo() {
+        return userInfoService.findAll();
     }
 
-    @PostMapping(value = "info")
-    public String userAdd(@RequestParam("userName") String userName,
-                          @RequestParam("password") String password,
-                          @RequestParam("phone") String phone,
-                          @RequestParam("role") String role,
-                          @RequestBody String temp) {
-        try {
-            User user = new User();
-            user.setUserId(UUID.randomUUID().toString().replace("-", ""));
-            user.setUserName(userName);
-            user.setPhone(phone);
-            user.setRole(role);
-            user.setCrDate(new Date());
-            user.setUpDate(new Date());
-            userRepository.save(user);
+    @RequestMapping(value = "/updateOne")
+    @ResponseBody
+    public String updateOne(Long uid,String phone, String name,String username, String state ) {
+        boolean res = userInfoService.updateUserInfo(uid,phone,name,state,username);
+        if(res) {
             return "ok";
-        }catch (Exception e) {
-            return e.getMessage();
+        } else {
+            return "no";
         }
+    }
+
+    /**
+     * 查询一个
+     * @return
+     */
+    @RequestMapping(value = "/oneUser")
+    @ResponseBody
+    public JSONObject getOne(Long uid) {
+        return userInfoService.findByUid(uid);
     }
 
 }
