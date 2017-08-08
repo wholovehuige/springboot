@@ -3,6 +3,7 @@ package com.study.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.study.domain.user.UserInfo;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -18,7 +19,7 @@ public interface UserInfoService {
 
     UserInfo findByUserName(String userName);
 
-    JSONObject findAll();
+    JSONObject findAll( Pageable pageable);
 
     boolean updateUserInfo(Long uid ,String phone,String name,String state,String username);
 

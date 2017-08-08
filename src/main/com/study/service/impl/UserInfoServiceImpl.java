@@ -6,6 +6,8 @@ import com.study.domain.user.UserInfo;
 import com.study.repository.UserInfoRepository;
 import com.study.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,10 +52,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public JSONObject findAll() {
+    public JSONObject findAll(Pageable pageable) {
         JSONObject object = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        List<UserInfo> userInfoList = userInfoRepository.findAll();
+        Page<UserInfo> userInfos = userInfoRepository.findAll(pageable);
+        List<UserInfo> userInfoList = userInfos.getContent();
         for(UserInfo userInfo : userInfoList) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username",userInfo.getUsername());

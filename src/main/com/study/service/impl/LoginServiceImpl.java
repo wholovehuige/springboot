@@ -22,6 +22,11 @@ public class LoginServiceImpl implements LoginService{
     private LoginRepository loginRepository;
 
     @Override
+    public Long allUserCount() {
+        return loginRepository.count();
+    }
+
+    @Override
     public String register(String phone, String password) {
         Login in = loginRepository.findByPhone(phone);
         if(in != null) {
@@ -38,6 +43,7 @@ public class LoginServiceImpl implements LoginService{
 //        userInfo.setUid(uid);
         userInfo.setPhone(phone);
         userInfo.setPassword(password);
+        userInfo.setState("0");
         userInfo.setCrDate(new Date());
         userInfo.setUpDate(new Date());
         userRepository.save(userInfo);

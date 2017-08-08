@@ -9,6 +9,8 @@ import com.study.service.LoginService;
 import com.study.service.UserInfoService;
 import com.study.web.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/register")
-//    @ResponseBody
+    @ResponseBody
     public String register(RegisterRequest registerRequest) {
         String phone = registerRequest.getPhone();
         String password = registerRequest.getPassword();
@@ -53,8 +55,9 @@ public class UserController {
      */
     @RequestMapping(value = "/userList")
     @ResponseBody
-    public JSONObject getInfo() {
-        return userInfoService.findAll();
+    public JSONObject getInfo(int page,int size) {
+        Pageable pageable = new PageRequest(page,size);
+        return userInfoService.findAll(pageable);
     }
 
     @RequestMapping(value = "/updateOne")

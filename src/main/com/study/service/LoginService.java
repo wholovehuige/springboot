@@ -9,4 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface LoginService {
     String register(String phone,String password);
+
+    Long allUserCount();
 }

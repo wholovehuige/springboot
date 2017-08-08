@@ -11,9 +11,8 @@
 <body>
 
 <div id="dataForm" class="loginClass">
-    <button id="se" type="button" v-on:click="getAll()">fsdfadsf</button>
     <table id="allData" class="table table-bordered">
-        <caption>边框表格布局</caption>
+        <caption>所用用户数据</caption>
         <thead>
         <tr>
             <td>姓名</td>
@@ -31,58 +30,96 @@
             <td>{{ site.phone }}</td>
             <td>{{ site.state }}</td>
             <td>{{ site.uid }}</td>
-            <td><button v-on:click="getByUid(site.uid)">修改</button></td>
+            <td>
+                <button v-on:click="getByUid(site.uid)">修改</button>
+            </td>
         </tr>
         </thead>
-    </table>
 
-    <table id="singleData"  class="table table-bordered">
-        <caption>边框表格布局</caption>
+    </table>
+    <div style="text-align: center">
+        <ul class="pagination">
+            <li v-if="allCount>1" v-model="1"><a v-on:click="getAll(0)">&laquo;</a></li>
+            <li v-for="item in allCount"><a v-on:click="getAll(item-1)">{{item}}</a></li>
+            <!--<li v-if="allCount>1"><a href="#">&laquo;</a></li>-->
+            <!--<li v-if="allCount>1"><a href="#">1</a></li>-->
+            <!--<li v-if="allCount>1"><a href="#">2</a></li>-->
+            <!--<li v-if="allCount>2"><a href="#">3</a></li>-->
+            <!--<li v-if="allCount>3"><a href="#">4</a></li>-->
+            <!--<li v-if="allCount>4"><a href="#">5</a></li>-->
+            <li v-if="allCount>1" v-model="allCount"><a v-on:click="getAll(allCount-1)">&raquo;</a></li>
+        </ul>
+    </div>
+
+    <table id="singleData" class="table table-bordered">
+        <caption>单个用户数据</caption>
         <thead>
-            <tr>
-                <td>姓名</td>
-                <td>登录名</td>
-                <td>电话</td>
-                <td>状态</td>
-                <td>uid</td>
-                <td>修改</td>
-            </tr>
+        <tr>
+            <td>姓名</td>
+            <td>登录名</td>
+            <td>电话</td>
+            <td>状态</td>
+            <td>uid</td>
+            <td>修改</td>
+        </tr>
         </thead>
         <thead id="user">
-            <tr>
-                <td><input type="text" v-model="user.name"></td>
-                <td><input type="text" v-model="user.username"></td>
-                <td><input type="text" v-model="user.phone"></td>
-                <td><input type="text" v-model="user.state"></td>
-                <td>{{user.uid}}</td>
-                <td><button v-on:click="updateMethod(user.uid,user.phone,user.name,user.username,user.state)">提交</button></td>
-            </tr>
+        <tr>
+            <td><input class="form-control" type="text" v-model="user.name"></td>
+            <td><input class="form-control" type="text" v-model="user.username"></td>
+            <td><input class="form-control" type="text" v-model="user.phone"></td>
+            <td><input class="form-control" type="text" v-model="user.state"></td>
+            <td>{{user.uid}}</td>
+            <td>
+                <button v-on:click="updateMethod(user.uid,user.phone,user.name,user.username,user.state)">提交</button>
+            </td>
+        </tr>
         </thead>
     </table>
 
 </div>
 </body>
 <script type="text/javascript">
+    var currentPage = 0;
     var vue = new Vue({
+        mounted() {
+            this.getAllUser();
+            var page = 0;
+            this.getAll(page);
+        },
         el: '#dataForm',
         data: {
             data: 'data',
             user: 'user',
+            allCount: '',
+            currentPage:''
         },
         methods: {
-            getAll: function () {
+            getAllUser: function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/allUserCount',
+                    cache: false,
+                    success: function (data) {
+                        vue.allCount = data;
+                    }
+                })
+            },
+            getAll: function (page) {
+                currentPage = page;
+                console.log('获取当前的page:'+currentPage);
                 $.ajax({
                     type: 'GET',
                     url: '/user/userList',
                     dataType: 'json',
+                    data: {page: page, size: 5},
                     cache: false,
                     success: function (data) {
                         vue.data = data;
                     }
                 })
             },
-
-            getByUid: function ( uid) {
+            getByUid: function (uid) {
                 $.ajax({
                     type: 'GET',
                     url: '/user/oneUser',
@@ -90,26 +127,25 @@
                     data: {uid: uid},
                     cache: false,
                     success: function (data) {
-                        console.log(data);
                         vue.user = data;
                     }
                 })
             },
-            updateMethod : function (uid, phone,  name, username, state) {
+            updateMethod: function (uid, phone, name, username, state) {
                 $.ajax({
-                    type:'GET',
+                    type: 'GET',
                     url: '/user/updateOne',
-                    dataType:'json',
-                    data:{uid:uid, phone:phone,  name:name, username:username, state:state},
-                    success : function (data) {
-                        console.log(data)
+//                    dataType:'json',
+                    data: {uid: uid, phone: phone, name: name, username: username, state: state},
+                    success: function (data) {
+                        vue.$nextTick(function () {
+                            vue.getAll(currentPage);
+                            console.log('执行了动态更新 ');
+                        })
                     }
                 })
             }
-
-
         }
-
     })
 </script>
 </html>
