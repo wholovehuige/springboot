@@ -22,6 +22,19 @@ public class LoginServiceImpl implements LoginService{
     private LoginRepository loginRepository;
 
     @Override
+    public String submit(String phone, String password) {
+        Login in = loginRepository.findByPhone(phone);
+        if(in == null){
+            return null;
+        }
+        String passwd = in.getPassword();
+        if(!passwd.equals(passwd)){
+            return null;
+        }
+        return in.getId().toString();
+    }
+
+    @Override
     public Long allUserCount() {
         return loginRepository.count();
     }

@@ -39,6 +39,7 @@ public class UserController {
         return "page/user";
     }
 
+    //注册
     @PostMapping(value = "/register")
     @ResponseBody
     public String register(RegisterRequest registerRequest) {
@@ -47,7 +48,18 @@ public class UserController {
         String res =  loginService.register(phone,password);
         return res;
     }
-
+    //登陆
+    @PostMapping(value = "/submit")
+    @ResponseBody
+    public String submit(RegisterRequest registerRequest) {
+        String phone = registerRequest.getPhone();
+        String password = registerRequest.getPassword();
+        String id = loginService.submit(phone,password);
+        if(id == null) {
+            return "0";
+        }
+        return "1";
+    }
 
     /**
      * 查询所有

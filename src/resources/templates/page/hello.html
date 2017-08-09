@@ -41,12 +41,6 @@
         <ul class="pagination">
             <li v-if="allCount>1" v-model="1"><a v-on:click="getAll(0)">&laquo;</a></li>
             <li v-for="item in allCount"><a v-on:click="getAll(item-1)">{{item}}</a></li>
-            <!--<li v-if="allCount>1"><a href="#">&laquo;</a></li>-->
-            <!--<li v-if="allCount>1"><a href="#">1</a></li>-->
-            <!--<li v-if="allCount>1"><a href="#">2</a></li>-->
-            <!--<li v-if="allCount>2"><a href="#">3</a></li>-->
-            <!--<li v-if="allCount>3"><a href="#">4</a></li>-->
-            <!--<li v-if="allCount>4"><a href="#">5</a></li>-->
             <li v-if="allCount>1" v-model="allCount"><a v-on:click="getAll(allCount-1)">&raquo;</a></li>
         </ul>
     </div>

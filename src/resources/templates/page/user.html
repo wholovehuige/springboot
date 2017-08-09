@@ -26,7 +26,8 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button id="submit" type="button" v-on:click="register()" class="btn btn-default">注册</button>
+                <button id="register" type="button" v-on:click="register()" class="btn btn-default">注册</button>
+                <button id="submit" type="button" v-on:click="submit()" class="btn btn-default">登录</button>
             </div>
         </div>
     </form>
@@ -53,6 +54,21 @@
                     success:function (data) {
                         console.log(data)
                        window.location.href='/hello';
+                    }
+                })
+            },
+            submit: function () {
+                var phone = document.getElementById("phone").value;
+                var password = document.getElementById("password").value;
+                $.ajax({
+                    type:'POST',
+                    url:'/user/submit',
+//                    dataType:'json',
+                    data:{phone:phone,password:password},
+                    cache:false,
+                    success:function (data) {
+                        console.log(data)
+                        window.location.href='/hello';
                     }
                 })
             }
