@@ -74,8 +74,8 @@ public class UserController {
 
     @RequestMapping(value = "/updateOne")
     @ResponseBody
-    public String updateOne(Long uid,String phone, String name,String username, String state ) {
-        boolean res = userInfoService.updateUserInfo(uid,phone,name,state,username);
+    public String updateOne(Long uid,String phone, String name,String username, String state ,String image) {
+        boolean res = userInfoService.updateUserInfo(uid,phone,name,state,username,image);
         if(res) {
             return "ok";
         } else {

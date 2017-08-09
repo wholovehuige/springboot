@@ -56,6 +56,7 @@ public class LoginServiceImpl implements LoginService{
 //        userInfo.setUid(uid);
         userInfo.setPhone(phone);
         userInfo.setPassword(password);
+        userInfo.setImage("");
         userInfo.setState("0");
         userInfo.setCrDate(new Date());
         userInfo.setUpDate(new Date());

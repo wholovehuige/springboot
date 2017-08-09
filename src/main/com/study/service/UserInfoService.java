@@ -21,6 +21,6 @@ public interface UserInfoService {
 
     JSONObject findAll( Pageable pageable);
 
-    boolean updateUserInfo(Long uid ,String phone,String name,String state,String username);
+    boolean updateUserInfo(Long uid ,String phone,String name,String state,String username,String image);
 
 }

@@ -30,12 +30,13 @@ public class UserInfoServiceImpl implements UserInfoService {
             jsonObject.put("uid",userInfo.getUid());
             jsonObject.put("phone",userInfo.getPhone());
             jsonObject.put("state",userInfo.getState());
+            jsonObject.put("image",userInfo.getImage());
         }
         return jsonObject;
     }
 
     @Override
-    public boolean updateUserInfo(Long uid ,String phone, String name, String state,String username) {
+    public boolean updateUserInfo(Long uid ,String phone, String name, String state,String username,String image) {
         if(uid == null) {
             return false;
         }
@@ -46,6 +47,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setPhone(phone);
         userInfo.setName(name);
         userInfo.setState(state);
+        userInfo.setImage(image==null?"":image);
         userInfo.setUsername(username);
         userInfoRepository.saveAndFlush(userInfo);
         return true;
@@ -64,6 +66,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             jsonObject.put("uid",userInfo.getUid());
             jsonObject.put("phone",userInfo.getPhone());
             jsonObject.put("state",userInfo.getState());
+            jsonObject.put("image",userInfo.getImage());
 
             jsonArray.add(jsonObject);
         }

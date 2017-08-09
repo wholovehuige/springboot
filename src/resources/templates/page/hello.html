@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css"/>
     <script type="text/javascript" src="/js/vue/vue.min.js"></script>
     <script type="text/javascript" src="/js/jquery/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/js/qiniu/qiniu.min.js"></script>
+    <script type="text/javascript" src="/js/qiniu/lrz.all.bundle.js"></script>
+    <script type="text/javascript" src="/js/qiniu/plupload.full.min.js"></script>
 </head>
 <body>
 
@@ -20,6 +23,7 @@
             <td>电话</td>
             <td>状态</td>
             <td>uid</td>
+            <td>头像</td>
             <td>修改</td>
         </tr>
         </thead>
@@ -30,6 +34,7 @@
             <td>{{ site.phone }}</td>
             <td>{{ site.state }}</td>
             <td>{{ site.uid }}</td>
+            <td><img style="height: 30px;width: 30px" v-bind:src="site.image" alt="无图片"></td>
             <td>
                 <button v-on:click="getByUid(site.uid)">修改</button>
             </td>
@@ -54,6 +59,7 @@
             <td>电话</td>
             <td>状态</td>
             <td>uid</td>
+            <td>头像</td>
             <td>修改</td>
         </tr>
         </thead>
@@ -64,8 +70,9 @@
             <td><input class="form-control" type="text" v-model="user.phone"></td>
             <td><input class="form-control" type="text" v-model="user.state"></td>
             <td>{{user.uid}}</td>
+            <td><input id="select_file" class="" type="file"><img id="img_" style="width: 30px;height: 30px" src=""></td>
             <td>
-                <button v-on:click="updateMethod(user.uid,user.phone,user.name,user.username,user.state)">提交</button>
+                <button v-on:click="updateMethod(user.uid,user.phone,user.name,user.username,user.state,user.image)">提交</button>
             </td>
         </tr>
         </thead>
@@ -75,8 +82,11 @@
 </body>
 <script type="text/javascript">
     var currentPage = 0;
+    var quNiuToken = '';
+    var yuMing = 'oswobiwir.bkt.clouddn.com';
     var vue = new Vue({
         mounted() {
+            this.getQiNiuToken();
             this.getAllUser();
             var page = 0;
             this.getAll(page);
@@ -89,6 +99,17 @@
             currentPage:''
         },
         methods: {
+            getQiNiuToken: function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/qiNiu',
+                    cache: false,
+                    success: function (data) {
+                        quNiuToken = data;
+                        vue.allCount = data;
+                    }
+                })
+            },
             getAllUser: function () {
                 $.ajax({
                     type: 'GET',
@@ -101,7 +122,6 @@
             },
             getAll: function (page) {
                 currentPage = page;
-                console.log('获取当前的page:'+currentPage);
                 $.ajax({
                     type: 'GET',
                     url: '/user/userList',
@@ -125,21 +145,63 @@
                     }
                 })
             },
-            updateMethod: function (uid, phone, name, username, state) {
+            updateMethod: function (uid, phone, name, username, state,image) {
+                var image = $("#img_")[0].src;
+                console.log("提交之前的image" + image);
                 $.ajax({
                     type: 'GET',
                     url: '/user/updateOne',
 //                    dataType:'json',
-                    data: {uid: uid, phone: phone, name: name, username: username, state: state},
+                    data: {uid: uid, phone: phone, name: name, username: username, state: state,image:image},
                     success: function (data) {
                         vue.$nextTick(function () {
                             vue.getAll(currentPage);
-                            console.log('执行了动态更新 ');
                         })
                     }
                 })
             }
         }
+    })
+
+    var select_file = document.getElementById("select_file");
+    select_file.addEventListener('change',function () {
+        if($('#select_file').val() !=''){
+            var that = this;
+            lrz(that.files[0],{width: 800}).then(function (rst) {
+                var formData = new FormData();
+                formData.append("token",quNiuToken);
+                formData.append("file",rst.file);
+                $.ajax({
+                    type: "POST",
+                    url: "http://up-z1.qiniu.com/",
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function (XMLHttpRequest) {
+
+                    },
+                    success: function (data) {
+                        if ("1" == data.error) {
+                            return false;
+                        } else {
+                            var sourceLink='http://'+yuMing+'/'+data.hash;
+                            document.getElementById("img_").src = sourceLink;
+                            return false;
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) { //上传失败
+                        //hideLoader();
+                        //alert('操作错误');
+                    }
+                })
+            })
+        }
+
     })
 </script>
 </html>
