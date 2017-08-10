@@ -23,4 +23,6 @@ public interface UserInfoService {
 
     boolean updateUserInfo(Long uid ,String phone,String name,String state,String username,String image);
 
+    JSONObject getUserDetail();
+
 }

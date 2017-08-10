@@ -93,4 +93,16 @@ public class UserController {
         return userInfoService.findByUid(uid);
     }
 
+
+    //页面跳转
+    @RequestMapping(value = "/detail")
+    public String getUserDetail() {
+        return "/page/userDetail";
+    }
+
+    @GetMapping(value = "/count")
+    @ResponseBody
+    public JSONObject getUsercCunt() {
+        return userInfoService.getUserDetail();
+    }
 }

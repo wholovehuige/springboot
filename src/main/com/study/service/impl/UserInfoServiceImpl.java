@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 /**
@@ -19,6 +21,42 @@ import java.util.List;
 public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     private UserInfoRepository userInfoRepository;
+    @Autowired
+    private EntityManager entityManager;
+
+    @Override
+    public JSONObject getUserDetail() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("Etext","所有的用户");
+        jsonObject.put("Esubtext","针对认证和未认证统计");
+        //查询总数
+        String zero = "select count(*) from user_info where state = '0'";
+        //查询state = 1的
+        String one = "select count(*) from user_info where state = '1'";
+        Query zeroQuery = entityManager.createNativeQuery(zero);
+        Query oneQuery = entityManager.createNativeQuery(one);
+        List zeroList = zeroQuery.getResultList();
+        List oneList = oneQuery.getResultList();
+        JSONArray  titleData = new JSONArray();
+        titleData.add("已证过");
+        titleData.add("未认证");
+        JSONArray  dataData = new JSONArray();
+        if(zeroList.size()>0) {
+            JSONObject object = new JSONObject();
+            object.put("value",zeroList.get(0));
+            object.put("name","已证过");
+            dataData.add(object);
+        }
+        if(oneList.size()>0) {
+            JSONObject object = new JSONObject();
+            object.put("value",oneList.get(0));
+            object.put("name","未认证");
+            dataData.add(object);
+        }
+        jsonObject.put("titleData",titleData);
+        jsonObject.put("dataData",dataData);
+        return jsonObject;
+    }
 
     @Override
     public JSONObject findByUid(Long uid) {

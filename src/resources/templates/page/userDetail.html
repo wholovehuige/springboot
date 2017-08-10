@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css"/>
+    <script type="text/javascript" src="/js/vue/vue.min.js"></script>
+    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/js/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/js/echarts/charts.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <div>
+        <p>用户比例</p>
+        <div style="width: 500px;height: 500px" id="userDetail">
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var vue = new Vue({
+        mounted() {
+            this.getUserDetail();
+        },
+        el: '#app',
+        data: {
+            data: 'data',
+        },
+        methods: {
+            getUserDetail: function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/user/count',
+                    cache: false,
+                    success: function (data) {
+                        var Etext = data.Etext;
+                        var Esubtext = data.Esubtext;
+                        var titleData = data.titleData;
+                        var dataData = data.dataData;
+                        var option = setCharts(Etext,Esubtext,titleData,dataData);
+                        var ob = echarts.init(document.getElementById("userDetail"));
+                        ob.setOption(option);
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

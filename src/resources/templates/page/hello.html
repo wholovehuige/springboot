@@ -34,7 +34,7 @@
             <td>{{ site.phone }}</td>
             <td>{{ site.state }}</td>
             <td>{{ site.uid }}</td>
-            <td><img style="height: 30px;width: 30px" v-bind:src="site.image" alt="无图片"></td>
+            <td><img class="img-responsive" style="height: 30px;width: 30px" v-bind:src="site.image" alt="无图片"></td>
             <td>
                 <button v-on:click="getByUid(site.uid)">修改</button>
             </td>
@@ -70,7 +70,7 @@
             <td><input class="form-control" type="text" v-model="user.phone"></td>
             <td><input class="form-control" type="text" v-model="user.state"></td>
             <td>{{user.uid}}</td>
-            <td><input id="select_file" class="" type="file"><img id="img_" style="width: 30px;height: 30px" src=""></td>
+            <td><input id="select_file" class="" type="file"><img id="img_" class="img-responsive" style="width: 30px;height: 30px" src=""></td>
             <td>
                 <button v-on:click="updateMethod(user.uid,user.phone,user.name,user.username,user.state,user.image)">提交</button>
             </td>
@@ -95,8 +95,8 @@
         data: {
             data: 'data',
             user: 'user',
-            allCount: '',
-            currentPage:''
+            allCount: 0,
+            currentPage: ''
         },
         methods: {
             getQiNiuToken: function () {
@@ -106,7 +106,6 @@
                     cache: false,
                     success: function (data) {
                         quNiuToken = data;
-                        vue.allCount = data;
                     }
                 })
             },
@@ -147,7 +146,6 @@
             },
             updateMethod: function (uid, phone, name, username, state,image) {
                 var image = $("#img_")[0].src;
-                console.log("提交之前的image" + image);
                 $.ajax({
                     type: 'GET',
                     url: '/user/updateOne',
