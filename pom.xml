@@ -86,7 +86,6 @@
                 <configuration>
                     <mainClass>com.study.Application</mainClass>
                     <executable>true</executable>
-                    <fork>true</fork>
                 </configuration>
                 <executions>
                     <execution>
