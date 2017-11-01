@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Created by Administrator on 2017/5/4.
  */
-public interface LoginRepository extends JpaRepository<Login,Integer> {
+public interface LoginRepository extends JpaRepository<Login,Long> {
     Login findByPhone(String phone);
 }

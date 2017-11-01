@@ -49,6 +49,7 @@ public class LoginServiceImpl implements LoginService{
         login.setPhone(phone);
         login.setPassword(password);
         login.setCrDate(new Date());
+        login.setUpDate(new Date());
         loginRepository.save(login);
         String uuid = UUID.randomUUID().toString();
         String uid = uuid.replaceAll("-","");

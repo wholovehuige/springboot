@@ -1,5 +1,4 @@
-package com.study.domain.user;
-
+package com.study.base;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,10 +6,10 @@ import javax.persistence.Id;
 import java.util.Date;
 
 /**
- * Created by Administrator on 2017/5/4.
+ * Created by roy on 2017/8/16.
  */
 @Entity
-public class Login{
+public class BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -18,26 +17,6 @@ public class Login{
     private String updatedBy;
     private Date crDate;
     private Date upDate;
-    private String phone;
-    private String password;
-
-
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public Long getId() {
         return id;
