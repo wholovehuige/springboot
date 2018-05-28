@@ -370,6 +370,8 @@
                     cache: false,
                     success: function (data) {
                         console.log(data)
+                        vue.getRoomList(0);
+                        vue.roomListFun();
                     }
                 })
             },
