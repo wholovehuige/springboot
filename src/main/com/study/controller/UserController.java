@@ -93,6 +93,19 @@ public class UserController {
         return userInfoService.findByUid(uid);
     }
 
+    /**
+     * 删除用户
+     * @return
+     */
+    @RequestMapping(value = "/deleteBy")
+    @ResponseBody
+    public String deleteBy(Long uid) {
+        if(userInfoService.deleteById(uid))
+            return "1";
+        return "0";
+    }
+
+
 
     //页面跳转
     @RequestMapping(value = "/detail")

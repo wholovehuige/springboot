@@ -35,8 +35,8 @@ public class LoginServiceImpl implements LoginService{
     }
 
     @Override
-    public Long allUserCount() {
-        return loginRepository.count();
+    public Integer allUserCount() {
+        return userRepository.findAllByStateEquals("1").size();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class LoginServiceImpl implements LoginService{
         userInfo.setPhone(phone);
         userInfo.setPassword(password);
         userInfo.setImage("");
-        userInfo.setState("0");
+        userInfo.setState("1");
         userInfo.setCrDate(new Date());
         userInfo.setUpDate(new Date());
         userRepository.save(userInfo);

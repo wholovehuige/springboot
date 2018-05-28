@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public interface LoginService {
     String register(String phone,String password);
 
-    Long allUserCount();
+    Integer allUserCount();
 
     String submit(String phone,String password);
 }

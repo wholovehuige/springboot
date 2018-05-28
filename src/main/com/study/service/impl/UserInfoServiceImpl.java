@@ -27,8 +27,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public JSONObject getUserDetail() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("Etext","所有的用户");
-        jsonObject.put("Esubtext","针对认证和未认证统计");
+        jsonObject.put("Etext", "所有的用户");
+        jsonObject.put("Esubtext", "针对认证和未认证统计");
         //查询总数
         String zero = "select count(*) from user_info where state = '0'";
         //查询state = 1的
@@ -37,24 +37,24 @@ public class UserInfoServiceImpl implements UserInfoService {
         Query oneQuery = entityManager.createNativeQuery(one);
         List zeroList = zeroQuery.getResultList();
         List oneList = oneQuery.getResultList();
-        JSONArray  titleData = new JSONArray();
-        titleData.add("已证过");
-        titleData.add("未认证");
-        JSONArray  dataData = new JSONArray();
-        if(zeroList.size()>0) {
+        JSONArray titleData = new JSONArray();
+        titleData.add("作废用户");
+        titleData.add("活跃用户");
+        JSONArray dataData = new JSONArray();
+        if (zeroList.size() > 0) {
             JSONObject object = new JSONObject();
-            object.put("value",zeroList.get(0));
-            object.put("name","已证过");
+            object.put("value", zeroList.get(0));
+            object.put("name", "作废用户");
             dataData.add(object);
         }
-        if(oneList.size()>0) {
+        if (oneList.size() > 0) {
             JSONObject object = new JSONObject();
-            object.put("value",oneList.get(0));
-            object.put("name","未认证");
+            object.put("value", oneList.get(0));
+            object.put("name", "活跃用户");
             dataData.add(object);
         }
-        jsonObject.put("titleData",titleData);
-        jsonObject.put("dataData",dataData);
+        jsonObject.put("titleData", titleData);
+        jsonObject.put("dataData", dataData);
         return jsonObject;
     }
 
@@ -62,30 +62,30 @@ public class UserInfoServiceImpl implements UserInfoService {
     public JSONObject findByUid(Long uid) {
         JSONObject jsonObject = new JSONObject();
         UserInfo userInfo = userInfoRepository.findByUid(uid);
-        if(userInfo != null) {
-            jsonObject.put("username",userInfo.getUsername());
-            jsonObject.put("name",userInfo.getName());
-            jsonObject.put("uid",userInfo.getUid());
-            jsonObject.put("phone",userInfo.getPhone());
-            jsonObject.put("state",userInfo.getState());
-            jsonObject.put("image",userInfo.getImage());
+        if (userInfo != null) {
+            jsonObject.put("username", userInfo.getUsername());
+            jsonObject.put("name", userInfo.getName());
+            jsonObject.put("uid", userInfo.getUid());
+            jsonObject.put("phone", userInfo.getPhone());
+            jsonObject.put("state", userInfo.getState());
+            jsonObject.put("image", userInfo.getImage());
         }
         return jsonObject;
     }
 
     @Override
-    public boolean updateUserInfo(Long uid ,String phone, String name, String state,String username,String image) {
-        if(uid == null) {
+    public boolean updateUserInfo(Long uid, String phone, String name, String state, String username, String image) {
+        if (uid == null) {
             return false;
         }
         UserInfo userInfo = userInfoRepository.findByUid(uid);
-        if(userInfo == null) {
+        if (userInfo == null) {
             return false;
         }
         userInfo.setPhone(phone);
         userInfo.setName(name);
         userInfo.setState(state);
-        userInfo.setImage(image==null?"":image);
+        userInfo.setImage(image == null ? "" : image);
         userInfo.setUsername(username);
         userInfoRepository.saveAndFlush(userInfo);
         return true;
@@ -95,21 +95,31 @@ public class UserInfoServiceImpl implements UserInfoService {
     public JSONObject findAll(Pageable pageable) {
         JSONObject object = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        Page<UserInfo> userInfos = userInfoRepository.findAll(pageable);
+        Page<UserInfo> userInfos = userInfoRepository.findAllByStateEquals("1", pageable);
         List<UserInfo> userInfoList = userInfos.getContent();
-        for(UserInfo userInfo : userInfoList) {
+        for (UserInfo userInfo : userInfoList) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("username",userInfo.getUsername());
-            jsonObject.put("name",userInfo.getName());
-            jsonObject.put("uid",userInfo.getUid());
-            jsonObject.put("phone",userInfo.getPhone());
-            jsonObject.put("state",userInfo.getState());
-            jsonObject.put("image",userInfo.getImage());
-
+            jsonObject.put("username", userInfo.getUsername());
+            jsonObject.put("name", userInfo.getName());
+            jsonObject.put("uid", userInfo.getUid());
+            jsonObject.put("phone", userInfo.getPhone());
+            jsonObject.put("state", userInfo.getState());
+            jsonObject.put("image", userInfo.getImage());
             jsonArray.add(jsonObject);
         }
-        object.put("data",jsonArray);
+        object.put("data", jsonArray);
         return object;
+    }
+
+
+    @Override
+    public boolean deleteById(Long uid) {
+        UserInfo userInfo = userInfoRepository.findByUid(uid);
+        if (userInfo == null)
+            return false;
+        userInfo.setState("0");
+        userInfoRepository.saveAndFlush(userInfo);
+        return true;
     }
 
     @Override

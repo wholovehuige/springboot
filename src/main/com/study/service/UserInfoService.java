@@ -25,4 +25,5 @@ public interface UserInfoService {
 
     JSONObject getUserDetail();
 
+    boolean deleteById(Long id);
 }

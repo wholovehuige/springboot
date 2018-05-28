@@ -1,20 +1,443 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<html xmlns="http://www.w3.org/1999/html" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml"
+      lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/index.css"/>
+    <script type="text/javascript" src="/js/vue/vue.min.js"></script>
+    <script type="text/javascript" src="/js/jquery/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/js/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/js/echarts/charts.js"></script>
+    <script type="text/javascript" src="/js/hotel/roomIndex.js"></script>
     <title>index</title>
 </head>
 <body>
-<div style="text-align: center">
-    <p>主页</p>
-    <div>
-        <a th:href="@{/user/user}" th:method="get">注册登陆</a>
-    </div>
+<div id="wrapper">
+    <!--NAV TOP-->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Created by Roy</a>
+        </div>
+        <div class="right-bar-login">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-user fa-fw"></i>
+                        <i class="fa fa-caret-down"></i>
+                        登陆成功
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-    <div>
-        <a th:href="@{/user/detail}" th:method="get">认证用户比例图</a>
+    </nav>
+    <!--NAV LEFT-->
+    <nav class="panel panel-success" role="navigation">
+        <div class="spanel-heading">
+            后台管理系统
+        </div>
+        <div class="panel-body">
+            <ul class="list-group" id="main-menu">
+                <li class="list-group-item"><a v-on:click="aboutMe()"><i class="fa fa-sitemap"></i>关于我</a></li>
+                <li id="manager" class="list-group-item"><a v-on:click="showManagerUl()" ><i  class="fa fa-sitemap"></i>管理员</a>
+                    <ul v-show="managerUl" class="">
+                        <li id="addManager" class="list-group-item"><a v-on:click="managerUpdate()"><i class="fa fa-sitemap"></i>删除管理员</a>
+                        </li>
+                        <li id="ManagerList" class="list-group-item"><a v-on:click="managerListFun()"><i class="fa fa-sitemap"></i>管理员列表</a>
+                        </li>
+                    </ul>
+                </li>
+                <li id="roomManager" class="list-group-item"><a  v-on:click="showRoomManagerUl()"><i class="fa fa-sitemap"></i>客房管理</a>
+                    <ul v-show="roomManagerUl" class="">
+                        <li id="roomAdd" class="list-group-item"><a v-on:click="addRoomFormFun()"><i class="fa fa-sitemap"></i>添加房间</a></li>
+                        <li id="ListRoom" class="list-group-item"><a v-on:click="roomListFun()"><i class="fa fa-sitemap"></i>客房列表</a></li>
+                    </ul>
+                </li>
+
+                <li class="list-group-item"><a href="#"><i class="fa fa-sitemap"></i>登录日志</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!--NAV right-->
+    <div id="app" class="nav-right">
+        <div v-show="userChart" id="userChart" class="roomStyle">
+            <p>管理员统计</p>
+            <div style="width: 500px;height: 500px" id="userDetail"></div>
+        </div>
+        <div v-show="roomChart" id="roomChart" class="roomStyle">
+            <p>客房统计</p>
+            <div style="width: 500px;height: 500px" id="roomCharts"></div>
+        </div>
+        <!--添加房间-->
+        <form v-show="addRoomForm" id="addRoomForm" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">房间类型</label>
+                <div class="col-sm-10">
+                    <select id="room" class="form-control">
+                        <option value="001">圆床房间</option>
+                        <option value="002">标间</option>
+                        <option value="003">商务房间</option>
+                        <option value="004">大床房</option>
+                        <option selected="selected" value="005">总统套间</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="col-sm-2 control-label">用户手机</label>
+                <div class="col-sm-10">
+                    <input id="phone" type="text" class="form-control"
+                           placeholder="请输入用户手机">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-sm-2 control-label">用户姓名</label>
+                <div class="col-sm-10">
+                    <input id="password" type="text" class="form-control"
+                           placeholder="请输入用户姓名">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button id="register" type="button" v-on:click="register()" class="btn btn-default">登记</button>
+                    <!--<button id="submit" type="button" v-on:click="submit()" class="btn btn-default">登录</button>-->
+                </div>
+            </div>
+        </form>
+        <!--用户列表-->
+        <table v-show="allData" id="allData" class="table table-bordered">
+            <caption>用户数据</caption>
+            <thead>
+            <tr>
+                <td>姓名</td>
+                <td>登录名</td>
+                <td>电话</td>
+                <td>状态</td>
+                <td>uid</td>
+                <td>头像</td>
+                <td v-show="updateBtn">修改</td>
+            </tr>
+            </thead>
+            <thead id="data" v-for="site in data.data">
+            <tr>
+                <td>{{ site.name }}</td>
+                <td>{{ site.username }}</td>
+                <td>{{ site.phone }}</td>
+                <td>{{ site.state }}</td>
+                <td>{{ site.uid }}</td>
+                <td><img class="img-responsive" style="height: 30px;width: 30px" v-bind:src="site.image" alt="无图片"></td>
+                <td v-show="updateBtn">
+                    <button v-on:click="deleteUserById(site.uid)">删除</button>
+                </td>
+            </tr>
+            </thead>
+        </table>
+        <div v-show="bottomBtn" id="bottomBtn" style="text-align: center">
+            <ul class="pagination">
+                <li v-if="userCount>1" v-model="1"><a v-on:click="getAll(0)">&laquo;</a></li>
+                <li v-for="item in userCount"><a v-on:click="getAll(item-1)">{{item}}</a></li>
+                <li v-if="userCount>1" v-model="userCount"><a v-on:click="getAll(userCount-1)">&raquo;</a></li>
+            </ul>
+        </div>
+
+        <!--客房列表-->
+        <table v-show="roomData" id="roomData" class="table table-bordered" >
+            <caption>客房数据</caption>
+            <thead>
+            <tr>
+                <td>编号</td>
+                <td>房间类型</td>
+                <td>客人姓名</td>
+                <td>客人电话</td>
+                <td>入住时间</td>
+                <td>状态</td>
+                <!--<td>修改</td>-->
+            </tr>
+            </thead>
+            <thead id="roomList" v-for="site in roomList">
+            <tr>
+                <td>{{ site.id }}</td>
+                <td>{{ site.roomName }}</td>
+                <td>{{ site.customerName }}</td>
+                <td>{{ site.customerPhone }}</td>
+                <td>{{ site.createdDate }}</td>
+                <td v-if="site.status == 1">在住状态</td>
+                <td v-if="site.status == 0">已退房</td>
+                <!--<td><button v-on:click="getByUid(site.uid)">修改</button></td>-->
+            </tr>
+            </thead>
+        </table>
+        <div v-show="roomBottom" id="roomBottom" style="text-align: center">
+            <ul class="pagination">
+                <li v-if="roomCount>1" v-model="1"><a v-on:click="getRoomList(0)">&laquo;</a></li>
+                <li v-for="item in roomCount"><a v-on:click="getRoomList(item-1)">{{item}}</a></li>
+                <li v-if="roomCount>1" v-model="roomCount"><a v-on:click="getRoomList(roomCount-1)">&raquo;</a></li>
+            </ul>
+        </div>
+
+
+        <div id="page-inner">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="page-header">
+                        <small>My own program</small>
+                    </h1>
+                </div>
+            </div>
+            <div id="dataForm" class="row"></div>
+        </div>
     </div>
 </div>
-
+<div class="footer">
+    <p>作者信息 <a href="http://www.hbut.edu.cn/" target="_blank" title="西尔">西尔</a> - Collect from <a
+            href="http://www.hbut.edu.cn/" title="" target="学校">湖北工业大学(www.hbut.edu.cn)</a></p>
+</div>
 </body>
+<script type="text/javascript">
+
+    var currentPage = 0;
+    var vue = new Vue({
+        mounted () {
+            var page = 0;
+            this.getUserDetail();
+            this.getRoomDetail();
+            this.getRoomCount();
+            this.getUserCount();
+            this.getRoomList(page);
+            this.getAll(page);
+        },
+        el: '#wrapper',
+        data: {
+            userChart: true,
+            roomChart: true,
+            managerUl:false,
+            roomManagerUl:false,
+            addRoomForm: false,
+            allData: false,
+            bottomBtn: false,
+            roomData: false,
+            roomBottom: false,
+            updateBtn: false,
+            data: 'data',
+            user: 'user',
+            userCount: 0,
+            roomCount: 0,
+            roomList: 'roomList',
+            currentPage: ''
+        },
+        methods: {
+            aboutMe: function () {
+                this.userChart = true;
+                this.roomChart = true;
+                this.managerUl = false;
+                this.roomManagerUl = false;
+                this.addRoomForm = false;
+                this.allData = false;
+                this.bottomBtn = false;
+                this.roomData = false;
+                this.roomBottom = false;
+            },
+            showManagerUl: function () {
+                this.userChart = false;
+                this.roomChart = false;
+                this.managerUl = true;
+                this.roomManagerUl = false;
+                this.addRoomForm = false;
+                this.allData = false;
+                this.bottomBtn = false;
+                this.roomData = false;
+                this.roomBottom = false;
+            },
+            showRoomManagerUl: function () {
+                this.userChart = false;
+                this.roomChart = false;
+                this.managerUl = false;
+                this.roomManagerUl = true;
+                this.addRoomForm = false;
+                this.allData = false;
+                this.bottomBtn = false;
+                this.roomData = false;
+                this.roomBottom = false;
+            },
+            managerUpdate:function () {
+                this.updateBtn = true;
+                this.userChart = false;
+                this.roomChart = false;
+                this.managerUl = true;
+                this.roomManagerUl = false;
+                this.addRoomForm = false;
+                this.allData = true;
+                this.bottomBtn = true;
+                this.roomData = false;
+                this.roomBottom = false;
+            },
+            managerListFun: function () {
+                this.updateBtn = false;
+                this.userChart = false;
+                this.roomChart = false;
+                this.managerUl = true;
+                this.roomManagerUl = false;
+                this.addRoomForm = false;
+                this.allData = true;
+                this.bottomBtn = true;
+                this.roomData = false;
+                this.roomBottom = false;
+            },
+            addRoomFormFun: function () {
+                this.userChart = false;
+                this.roomChart = false;
+                this.managerUl = false;
+                this.roomManagerUl = true;
+                this.addRoomForm = true;
+                this.allData = false;
+                this.bottomBtn = false;
+                this.roomData = false;
+                this.roomBottom = false;
+            },
+            roomListFun: function () {
+                this.userChart = false;
+                this.roomChart = false;
+                this.managerUl = false;
+                this.roomManagerUl = true;
+                this.addRoomForm = false;
+                this.allData = false;
+                this.bottomBtn = false;
+                this.roomData = true;
+                this.roomBottom = true;
+            },
+            deleteUserById: function (uid) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/user/deleteBy',
+                    dataType: 'json',
+                    data: {uid: uid},
+                    cache: false,
+                    success: function (data) {
+                        console.log(data);
+                        vue.getUserCount();
+                        vue.getAll(0);
+
+                    }
+                })
+            },
+            getRoomDetail: function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/room/charts',
+                    cache: false,
+                    success: function (data) {
+                        var Etext = data.Etext;
+                        var Esubtext = data.Esubtext;
+                        var titleData = data.titleData;
+                        var dataData = data.dataData;
+                        var option = roomCharts(Etext, Esubtext, titleData, dataData);
+                        var oob = echarts.init(document.getElementById("roomCharts"));
+                        oob.setOption(option);
+                    }
+                })
+            },
+            getUserDetail: function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/user/count',
+                    cache: false,
+                    success: function (data) {
+                        var Etext = data.Etext;
+                        var Esubtext = data.Esubtext;
+                        var titleData = data.titleData;
+                        var dataData = data.dataData;
+                        var option = setCharts(Etext, Esubtext, titleData, dataData);
+                        var ob = echarts.init(document.getElementById("userDetail"));
+                        ob.setOption(option);
+                    }
+                })
+            },
+            register: function () {
+                var roomCode = document.getElementById("room").value;
+                var roomName = $("#room option:selected").text();
+                var customerPhone = document.getElementById("phone").value;
+                var customerName = document.getElementById("password").value;
+                $.ajax({
+                    type: 'POST',
+                    url: '/room/add',
+                    data: {
+                        roomCode: roomCode,
+                        roomName: roomName,
+                        customerPhone: customerPhone,
+                        customerName: customerName
+                    },
+                    cache: false,
+                    success: function (data) {
+                        console.log(data)
+                    }
+                })
+            },
+            getUserCount: function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/allUserCount',
+                    cache: false,
+                    success: function (data) {
+                        vue.userCount = data;
+                    }
+                })
+            },
+            getAll: function (page) {
+                currentPage = page;
+                $.ajax({
+                    type: 'GET',
+                    url: '/user/userList',
+                    dataType: 'json',
+                    data: {page: page, size: 5},
+                    cache: false,
+                    success: function (data) {
+                        vue.data = data;
+                    }
+                })
+            },
+            getRoomCount: function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/room/count',
+                    cache: false,
+                    success: function (data) {
+                        data = data / 5;
+                        console.log(Math.ceil(data));
+                        vue.roomCount = Math.ceil(data);
+                    }
+                })
+            },
+            getRoomList: function (page) {
+                currentPage = page;
+                $.ajax({
+                    type: 'GET',
+                    url: '/room/list',
+                    dataType: 'json',
+                    data: {page: page, size: 5},
+                    cache: false,
+                    success: function (data) {
+                        console.log(data)
+                        vue.roomList = data;
+                    }
+                })
+            },
+            submit: function () {
+                var phone = document.getElementById("phone").value;
+                var password = document.getElementById("password").value;
+                $.ajax({
+                    type: 'POST',
+                    url: '/user/submit',
+                    data: {phone: phone, password: password},
+                    cache: false,
+                    success: function (data) {
+                        console.log(data)
+                        window.location.href = '/jump/index';
+                    }
+                })
+            }
+        }
+    })
+</script>
+
 </html>

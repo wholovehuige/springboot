@@ -26,12 +26,12 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/allUserCount")
     @ResponseBody
-    public Long getAllUserCount() {
-        Long all = loginService.allUserCount();
+    public Integer getAllUserCount() {
+        Integer all = loginService.allUserCount();
         double douAll = all.doubleValue();
         double temp = douAll/5;
         Double count = Math.ceil(temp);
-        all = count.longValue();
+        all = count.intValue();
         return all;
     }
 
@@ -39,7 +39,7 @@ public class HelloWorldController {
     @RequestMapping(value = "/")
     public String register() {
 
-        return "index";
+        return "page/login";
     }
 
 
