@@ -6,7 +6,7 @@ userinfo:
   phone: 654321
 spring:
   datasource:
-    url: jdbc:mysql://rm-uf6f66d26gd6rl06io.mysql.rds.aliyuncs.com:3306/apple?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-    username: apple
-    password: apple
+    url: jdbc:mysql://bdm25056535.my3w.com:3306/bdm25056535_db?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: bdm25056535
+    password: password
     driver-class-name: com.mysql.jdbc.Driver
