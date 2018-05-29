@@ -11,6 +11,9 @@
     <script type="text/javascript" src="/js/echarts/echarts.min.js"></script>
     <script type="text/javascript" src="/js/echarts/charts.js"></script>
     <script type="text/javascript" src="/js/hotel/roomIndex.js"></script>
+    <script type="text/javascript" src="/js/qiniu/qiniu.min.js"></script>
+    <script type="text/javascript" src="/js/qiniu/lrz.all.bundle.js"></script>
+    <script type="text/javascript" src="/js/qiniu/plupload.full.min.js"></script>
     <title>index</title>
 </head>
 <body>
@@ -43,7 +46,7 @@
                 <li class="list-group-item"><a v-on:click="aboutMe()"><i class="fa fa-sitemap"></i>关于我</a></li>
                 <li id="manager" class="list-group-item"><a v-on:click="showManagerUl()" ><i  class="fa fa-sitemap"></i>管理员</a>
                     <ul v-show="managerUl" class="">
-                        <li id="addManager" class="list-group-item"><a v-on:click="managerUpdate()"><i class="fa fa-sitemap"></i>删除管理员</a>
+                        <li id="addManager" class="list-group-item"><a v-on:click="managerUpdate()"><i class="fa fa-sitemap"></i>管理员修改</a>
                         </li>
                         <li id="ManagerList" class="list-group-item"><a v-on:click="managerListFun()"><i class="fa fa-sitemap"></i>管理员列表</a>
                         </li>
@@ -117,6 +120,7 @@
                 <td>uid</td>
                 <td>头像</td>
                 <td v-show="updateBtn">修改</td>
+                <td v-show="updateBtn">删除</td>
             </tr>
             </thead>
             <thead id="data" v-for="site in data.data">
@@ -127,6 +131,9 @@
                 <td>{{ site.state }}</td>
                 <td>{{ site.uid }}</td>
                 <td><img class="img-responsive" style="height: 30px;width: 30px" v-bind:src="site.image" alt="无图片"></td>
+                <td v-show="updateBtn">
+                    <button v-on:click="getByUid(site.uid)">修改</button>
+                </td>
                 <td v-show="updateBtn">
                     <button v-on:click="deleteUserById(site.uid)">删除</button>
                 </td>
@@ -140,6 +147,36 @@
                 <li v-if="userCount>1" v-model="userCount"><a v-on:click="getAll(userCount-1)">&raquo;</a></li>
             </ul>
         </div>
+
+        <!--单个用户table-->
+        <table v-show="singleDataTable" id="singleData" class="table table-bordered">
+            <caption>单个用户数据</caption>
+            <thead>
+            <tr>
+                <td>姓名</td>
+                <td>登录名</td>
+                <td>电话</td>
+                <td>状态</td>
+                <td>uid</td>
+                <td>头像</td>
+                <td>修改</td>
+            </tr>
+            </thead>
+            <thead id="user">
+            <tr>
+                <td><input class="form-control" type="text" v-model="user.name"></td>
+                <td><input class="form-control" type="text" v-model="user.username"></td>
+                <td><input class="form-control" type="text" v-model="user.phone"></td>
+                <td><input class="form-control" type="text" v-model="user.state"></td>
+                <td>{{user.uid}}</td>
+                <td><input id="select_file" class="" type="file"><img id="img_" class="img-responsive" style="width: 30px;height: 30px" src=""></td>
+                <td>
+                    <button v-on:click="updateMethod(user.uid,user.phone,user.name,user.username,user.state,user.image)">提交</button>
+                </td>
+            </tr>
+            </thead>
+        </table>
+
 
         <!--客房列表-->
         <table v-show="roomData" id="roomData" class="table table-bordered" >
@@ -164,7 +201,6 @@
                 <td>{{ site.createdDate }}</td>
                 <td v-if="site.status == 1">在住状态</td>
                 <td v-if="site.status == 0">已退房</td>
-                <!--<td><button v-on:click="getByUid(site.uid)">修改</button></td>-->
             </tr>
             </thead>
         </table>
@@ -195,11 +231,13 @@
 </div>
 </body>
 <script type="text/javascript">
-
+    var quNiuToken = '';
+    var yuMing = 'oswobiwir.bkt.clouddn.com';
     var currentPage = 0;
     var vue = new Vue({
         mounted () {
             var page = 0;
+            this.getQiNiuToken();
             this.getUserDetail();
             this.getRoomDetail();
             this.getRoomCount();
@@ -219,6 +257,7 @@
             roomData: false,
             roomBottom: false,
             updateBtn: false,
+            singleDataTable: false,
             data: 'data',
             user: 'user',
             userCount: 0,
@@ -227,82 +266,53 @@
             currentPage: ''
         },
         methods: {
+            allShowFalse:function () {
+                this.userChart = false;
+                this.roomChart = false;
+                this.managerUl=false;
+                this.roomManagerUl=false;
+                this.addRoomForm= false;
+                this.allData= false;
+                this.bottomBtn= false;
+                this.roomData= false;
+                this.roomBottom= false;
+                this.updateBtn= false;
+                this.singleDataTable= false;
+            },
             aboutMe: function () {
+                vue.allShowFalse();
                 this.userChart = true;
                 this.roomChart = true;
-                this.managerUl = false;
-                this.roomManagerUl = false;
-                this.addRoomForm = false;
-                this.allData = false;
-                this.bottomBtn = false;
-                this.roomData = false;
-                this.roomBottom = false;
             },
             showManagerUl: function () {
-                this.userChart = false;
-                this.roomChart = false;
+                vue.allShowFalse();
                 this.managerUl = true;
-                this.roomManagerUl = false;
-                this.addRoomForm = false;
-                this.allData = false;
-                this.bottomBtn = false;
-                this.roomData = false;
-                this.roomBottom = false;
             },
             showRoomManagerUl: function () {
-                this.userChart = false;
-                this.roomChart = false;
-                this.managerUl = false;
+                vue.allShowFalse();
                 this.roomManagerUl = true;
-                this.addRoomForm = false;
-                this.allData = false;
-                this.bottomBtn = false;
-                this.roomData = false;
-                this.roomBottom = false;
             },
             managerUpdate:function () {
+                vue.allShowFalse();
                 this.updateBtn = true;
-                this.userChart = false;
-                this.roomChart = false;
                 this.managerUl = true;
-                this.roomManagerUl = false;
-                this.addRoomForm = false;
                 this.allData = true;
                 this.bottomBtn = true;
-                this.roomData = false;
-                this.roomBottom = false;
             },
             managerListFun: function () {
-                this.updateBtn = false;
-                this.userChart = false;
-                this.roomChart = false;
+                vue.allShowFalse();
                 this.managerUl = true;
-                this.roomManagerUl = false;
-                this.addRoomForm = false;
                 this.allData = true;
                 this.bottomBtn = true;
-                this.roomData = false;
-                this.roomBottom = false;
             },
             addRoomFormFun: function () {
-                this.userChart = false;
-                this.roomChart = false;
-                this.managerUl = false;
+                vue.allShowFalse();
                 this.roomManagerUl = true;
                 this.addRoomForm = true;
-                this.allData = false;
-                this.bottomBtn = false;
-                this.roomData = false;
-                this.roomBottom = false;
             },
             roomListFun: function () {
-                this.userChart = false;
-                this.roomChart = false;
-                this.managerUl = false;
+                vue.allShowFalse();
                 this.roomManagerUl = true;
-                this.addRoomForm = false;
-                this.allData = false;
-                this.bottomBtn = false;
                 this.roomData = true;
                 this.roomBottom = true;
             },
@@ -398,6 +408,22 @@
                     }
                 })
             },
+            getByUid: function (uid) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/user/oneUser',
+                    dataType: 'json',
+                    data: {uid: uid},
+                    cache: false,
+                    success: function (data) {
+                        vue.user = data;
+                        vue.allShowFalse();
+                        vue.updateBtn = true;
+                        vue.managerUl = true;
+                        vue.singleDataTable = true;
+                    }
+                })
+            },
             getRoomCount: function () {
                 $.ajax({
                     type: 'GET',
@@ -437,8 +463,74 @@
                         window.location.href = '/jump/index';
                     }
                 })
+            },
+            getQiNiuToken: function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/qiNiu',
+                    cache: false,
+                    success: function (data) {
+                        quNiuToken = data;
+                    }
+                })
+            },
+            updateMethod: function (uid, phone, name, username, state,image) {
+                var image = $("#img_")[0].src;
+                $.ajax({
+                    type: 'GET',
+                    url: '/user/updateOne',
+//                    dataType:'json',
+                    data: {uid: uid, phone: phone, name: name, username: username, state: state,image:image},
+                    success: function (data) {
+                        vue.$nextTick(function () {
+                            vue.getAll(0);
+                            vue.managerListFun();
+                        })
+                    }
+                })
             }
         }
+    })
+
+    var select_file = document.getElementById("select_file");
+    select_file.addEventListener('change',function () {
+        if($('#select_file').val() !=''){
+            var that = this;
+            lrz(that.files[0],{width: 800}).then(function (rst) {
+                var formData = new FormData();
+                formData.append("token",quNiuToken);
+                formData.append("file",rst.file);
+                $.ajax({
+                    type: "POST",
+                    url: "http://up-z1.qiniu.com/",
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function (XMLHttpRequest) {
+
+                    },
+                    success: function (data) {
+                        if ("1" == data.error) {
+                            return false;
+                        } else {
+                            var sourceLink='http://'+yuMing+'/'+data.hash;
+                            document.getElementById("img_").src = sourceLink;
+                            return false;
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) { //上传失败
+                        //hideLoader();
+                        //alert('操作错误');
+                    }
+                })
+            })
+        }
+
     })
 </script>
 
