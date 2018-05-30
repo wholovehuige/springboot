@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -25,8 +26,8 @@ public class HotelRoomController {
 
     @RequestMapping(value = "/add")
     @ResponseBody
-    public Long addRoom(String roomCode,String roomName,String customerPhone,String customerName) {
-        Long id = hotelRoomService.addRoom(roomName,roomCode,customerPhone,customerName);
+    public BigInteger addRoom(String roomCode, String roomName, String customerPhone, String customerName) {
+        BigInteger id = hotelRoomService.addRoom(roomName,roomCode,customerPhone,customerName);
         return id;
     }
 
@@ -35,6 +36,12 @@ public class HotelRoomController {
     public List<HotelRoom> roomList(int page,int size) {
         Pageable pageable = new PageRequest(page,size, Sort.Direction.DESC,"id");
         return hotelRoomService.selectAll(pageable);
+    }
+
+    @RequestMapping(value = "/list/by")
+    @ResponseBody
+    public List<HotelRoom> roomListBy(String searchName) {
+        return hotelRoomService.roomListBy(searchName);
     }
 
     @RequestMapping(value = "/count")

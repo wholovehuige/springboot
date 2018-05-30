@@ -5,6 +5,7 @@ import com.study.utils.myDate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Date;
 public class HotelRoom {
     @Id
     @GeneratedValue
-    private Long id;
+    private BigInteger id;
     private String RoomName;
     private String RoomCode;
     private String CustomerPhone;
@@ -23,11 +24,11 @@ public class HotelRoom {
     private Date createdDate;
 
 
-    public Long getId() {
+    public BigInteger getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(BigInteger id) {
         this.id = id;
     }
 

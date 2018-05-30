@@ -177,6 +177,13 @@
             </thead>
         </table>
 
+        <!--客房搜索-->
+        <div v-show="roomSearch" class="input-group col-md-3" style="width: 500px;margin-top:50px; positon:relative">
+            <input id="searchValue" type="text" class="form-control"placeholder="请输入客户姓名或电话" />
+            <span class="input-group-btn">
+               <button class="btn btn-info btn-search" v-on:click="getRoomListBy()">查找</button>
+            </span>
+        </div>
 
         <!--客房列表-->
         <table v-show="roomData" id="roomData" class="table table-bordered" >
@@ -213,7 +220,7 @@
         </div>
 
 
-        <div id="page-inner">
+        <div v-show="page_inner" id="page-inner">
             <div class="row">
                 <div class="col-md-12">
                     <h1 class="page-header">
@@ -223,6 +230,7 @@
             </div>
             <div id="dataForm" class="row"></div>
         </div>
+
     </div>
 </div>
 <div class="footer">
@@ -253,11 +261,13 @@
             roomManagerUl:false,
             addRoomForm: false,
             allData: false,
+            roomSearch: false,
             bottomBtn: false,
             roomData: false,
             roomBottom: false,
             updateBtn: false,
             singleDataTable: false,
+            page_inner:true,
             data: 'data',
             user: 'user',
             userCount: 0,
@@ -272,12 +282,14 @@
                 this.managerUl=false;
                 this.roomManagerUl=false;
                 this.addRoomForm= false;
+                this.roomSearch = false;
                 this.allData= false;
                 this.bottomBtn= false;
                 this.roomData= false;
                 this.roomBottom= false;
                 this.updateBtn= false;
                 this.singleDataTable= false;
+                this.page_inner = true;
             },
             aboutMe: function () {
                 vue.allShowFalse();
@@ -291,6 +303,8 @@
             showRoomManagerUl: function () {
                 vue.allShowFalse();
                 this.roomManagerUl = true;
+                this.roomSearch = true;
+                this.page_inner = false;
             },
             managerUpdate:function () {
                 vue.allShowFalse();
@@ -395,6 +409,24 @@
                     }
                 })
             },
+            getRoomListBy: function () {
+                var searchName = document.getElementById("searchValue").value;
+                $.ajax({
+                    type: 'GET',
+                    url: '/room/list/by',
+                    dataType: 'json',
+                    data: {searchName : searchName},
+                    cache: false,
+                    success: function (data) {
+                        vue.roomList = data;
+                        vue.allShowFalse();
+                        vue.roomManagerUl = true;
+                        vue.roomSearch = true;
+                        vue.roomData = true;
+                        vue.page_inner = false;
+                    }
+                })
+            },
             getAll: function (page) {
                 currentPage = page;
                 $.ajax({
@@ -445,7 +477,6 @@
                     data: {page: page, size: 5},
                     cache: false,
                     success: function (data) {
-                        console.log(data)
                         vue.roomList = data;
                     }
                 })
