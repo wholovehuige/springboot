@@ -1,18 +1,45 @@
 spring:
   profiles:
-#    active: dev
-    active: prd
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    database: mysql
-
+    active: dev
   thymeleaf:
-    mode: HTML5
     encoding: UTF-8
     content-type: text/html
     cache: false
     prefix: classpath:/templates/
     suffix: .html
+    mode: LEGACYHTML5
+
+  datasource:
+    druid:
+        initial-size: 1
+        min-idle: 1
+        max-active: 20
+        max-wait: 60000
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        validation-query: select version();
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 20
+        filters: stat,wall,log4j
+#        connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+#        web-stat-filter:
+#          url-pattern: classpath:/static/*
+#          exclusions: *.js,*.jif,*.jpg,*.png,*.css,*.ioc,/druid/*
+#        stat-view-servlet:
+#          reset-enable: false
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.roy.tools.model
+  global-config:
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+    capital-mode: true
+    id-type: 3
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+

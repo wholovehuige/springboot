@@ -1,12 +1,12 @@
 server:
   port: 8080
-
-userinfo:
-  name: roy
-  phone: 123456
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/apple?useUnicode=true&characterEncoding=utf-8
-    username: root
-    password: password
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/auth?useUnicode=true&characterEncoding=utf-8
+      username: root
+      password: password
+
+swagger:
+  show : true

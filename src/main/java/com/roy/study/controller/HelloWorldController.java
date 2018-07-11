@@ -1,7 +1,6 @@
-package com.roy.study.controller;
+package com.roy.tools.controller;
 
-import com.roy.study.properties.Properties;
-import com.roy.study.service.LoginService;
+import com.roy.tools.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class HelloWorldController {
-    @Autowired
-    private Properties properties;
+
     @Autowired
     private LoginService loginService;
 

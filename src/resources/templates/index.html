@@ -3,7 +3,7 @@
       xmlns:v-bind="http://www.w3.org/1999/xhtml"
       lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/index.css"/>
     <script type="text/javascript" src="/js/vue/vue.min.js"></script>
@@ -91,14 +91,14 @@
                 <label for="phone" class="col-sm-2 control-label">用户手机</label>
                 <div class="col-sm-10">
                     <input id="phone" type="text" class="form-control"
-                           placeholder="请输入用户手机">
+                           placeholder="请输入用户手机"/>
                 </div>
             </div>
             <div class="form-group">
                 <label for="password" class="col-sm-2 control-label">用户姓名</label>
                 <div class="col-sm-10">
                     <input id="password" type="text" class="form-control"
-                           placeholder="请输入用户姓名">
+                           placeholder="请输入用户姓名" />
                 </div>
             </div>
             <div class="form-group">
@@ -130,7 +130,7 @@
                 <td>{{ site.phone }}</td>
                 <td>{{ site.state }}</td>
                 <td>{{ site.uid }}</td>
-                <td><img class="img-responsive" style="height: 30px;width: 30px" v-bind:src="site.image" alt="无图片"></td>
+                <td><img class="img-responsive" style="height: 30px;width: 30px" v-bind:src="site.image" alt="无图片" /></td>
                 <td v-show="updateBtn">
                     <button v-on:click="getByUid(site.uid)">修改</button>
                 </td>
@@ -164,12 +164,12 @@
             </thead>
             <thead id="user">
             <tr>
-                <td><input class="form-control" type="text" v-model="user.name"></td>
-                <td><input class="form-control" type="text" v-model="user.username"></td>
-                <td><input class="form-control" type="text" v-model="user.phone"></td>
-                <td><input class="form-control" type="text" v-model="user.state"></td>
+                <td><input class="form-control" type="text" v-model="user.name"/></td>
+                <td><input class="form-control" type="text" v-model="user.username"/></td>
+                <td><input class="form-control" type="text" v-model="user.phone"/></td>
+                <td><input class="form-control" type="text" v-model="user.state"/></td>
                 <td>{{user.uid}}</td>
-                <td><input id="select_file" class="" type="file"><img id="img_" class="img-responsive" style="width: 30px;height: 30px" src=""></td>
+                <td><input id="select_file" class="" type="file"/><img id="img_" class="img-responsive" style="width: 30px;height: 30px" src=""/></td>
                 <td>
                     <button v-on:click="updateMethod(user.uid,user.phone,user.name,user.username,user.state,user.image)">提交</button>
                 </td>
@@ -233,10 +233,6 @@
 
     </div>
 </div>
-<div class="footer">
-    <p>作者信息 <a href="http://www.hbut.edu.cn/" target="_blank" title="西尔">西尔</a> - Collect from <a
-            href="http://www.hbut.edu.cn/" title="" target="学校">湖北工业大学(www.hbut.edu.cn)</a></p>
-</div>
 </body>
 <script type="text/javascript">
     var quNiuToken = '';
@@ -244,17 +240,18 @@
     var currentPage = 0;
     var vue = new Vue({
         mounted () {
-            var page = 0;
             this.getQiNiuToken();
             this.getUserDetail();
             this.getRoomDetail();
-            this.getRoomCount();
-            this.getUserCount();
-            this.getRoomList(page);
-            this.getAll(page);
+//            this.getRoomCount();
+//            this.getUserCount();
+//            this.getRoomList(page);
+//            this.getAll(page);
         },
         el: '#wrapper',
         data: {
+            userPage: 0,
+            roomPage: 0,
             userChart: true,
             roomChart: true,
             managerUl:false,
@@ -299,6 +296,8 @@
             showManagerUl: function () {
                 vue.allShowFalse();
                 this.managerUl = true;
+                vue.getUserCount();
+                vue.getAll(this.userPage);
             },
             showRoomManagerUl: function () {
                 vue.allShowFalse();
@@ -329,6 +328,8 @@
                 this.roomManagerUl = true;
                 this.roomData = true;
                 this.roomBottom = true;
+                vue.getRoomCount();
+                vue.getRoomList(this.roomPage);
             },
             deleteUserById: function (uid) {
                 $.ajax({

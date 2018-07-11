@@ -1,12 +1,9 @@
-package com.roy.study.controller;
+package com.roy.tools.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.roy.study.domain.HotelRoom;
-import com.roy.study.service.impl.HotelRoomServiceImpl;
+import com.roy.tools.model.HotelRoom;
+import com.roy.tools.service.HotelRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,21 +18,20 @@ import java.util.List;
 @RequestMapping(value = "/room")
 public class HotelRoomController {
     @Autowired
-    private HotelRoomServiceImpl hotelRoomService;
+    private HotelRoomService hotelRoomService;
 
 
     @RequestMapping(value = "/add")
     @ResponseBody
     public BigInteger addRoom(String roomCode, String roomName, String customerPhone, String customerName) {
-        BigInteger id = hotelRoomService.addRoom(roomName,roomCode,customerPhone,customerName);
-        return id;
+        hotelRoomService.addRoom(roomName,roomCode,customerPhone,customerName);
+        return new BigInteger("1");
     }
 
     @RequestMapping(value = "/list")
     @ResponseBody
-    public List<HotelRoom> roomList(int page,int size) {
-        Pageable pageable = new PageRequest(page,size, Sort.Direction.DESC,"id");
-        return hotelRoomService.selectAll(pageable);
+    public List<HotelRoom> roomList(int page, int size) {
+        return hotelRoomService.selectAll(page,size);
     }
 
     @RequestMapping(value = "/list/by")
